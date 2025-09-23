@@ -1,118 +1,122 @@
-🔐 CipherChat – Secure Private Chat
+# CipherChat
 
-A real-time private chat app with password-protected rooms, secure invites, and modern security.
+**Secure private chat (real-time) with password-protected rooms, invite links, and modern security defaults.**
 
-🌟 Features
-🔒 Security
+---
 
-Passwords hashed with bcrypt
+## 🚀 Quick summary
 
-JWT authentication with auto-expiry
+CipherChat is a minimal, secure, real-time chat app built with a lightweight frontend and a WebSocket backend. Rooms can be password-protected or accessed via secure invite links. The app focuses on privacy, input sanitization, and simple developer-friendly setup.
 
-Rate limiting to prevent spam
+---
 
-Input sanitization to block XSS
+## 🌟 Key features (simple)
 
-Secure invite links (no password sharing)
+* Password-protected rooms (bcrypt hashing)
+* Invite links (token-based access without exposing passwords)
+* Real-time messaging via WebSocket (socket.io)
+* Automatic reconnection and basic message queuing
+* Typing indicators and room user lists
+* Rate limiting for key actions (create-room, send-message)
+* Input sanitization and XSS prevention
+* JWT session tokens with expiration
 
-💬 Chat Experience
+---
 
-Real-time messaging with WebSocket (Socket.io)
+## 🔐 Security highlights
 
-Create & join password-protected rooms
+* **Password hashing:** bcrypt with salt rounds
+* **Rate limiting:** per-action limits to reduce spam
+* **Input sanitization:** remove dangerous characters and escape HTML
+* **Content validation:** limits on username, room name, and message length
+* **Transport security:** WSS/HTTPS assumed in production
 
-Mobile-friendly glassmorphism UI
+---
 
-Automatic reconnection & message queuing
+## 📋 Validation rules (simple)
 
-Typing indicators & temporary chat history
+* **Room name:** 3–30 characters, letters, numbers, spaces, `-`, `_`
+* **Password:** 8–50 characters, must include upper, lower, and number
+* **Username:** 1–20 characters (auto-sanitized)
+* **Message:** 1–1000 characters
 
-⚡ Extra
+---
 
-User activity tracking
+## 🧩 Tech stack
 
-Message filtering & validation
+* Frontend: Vanilla JavaScript, HTML5, CSS3 (glassmorphism UI)
+* Real-time: Socket.IO (WebSocket)
+* Backend: Node.js + NestJS (socket gateway)
+* Auth & crypto: bcrypt, JWT
 
-4-hour session timeout
+---
 
-No permanent storage (memory only)
+## ⚙️ Quick setup (local)
 
-🚀 Live Demo
+1. Clone repo:
 
-Frontend: CipherChat Demo
-
-Backend: Hosted on Railway/Render (WebSocket server)
-(Free servers may take a few seconds to wake up)
-
-🛠️ Tech Stack
-
-Frontend: HTML5, CSS3, Vanilla JS
-
-Backend: NestJS + Socket.io
-
-Security: bcrypt, JWT, rate limiting
-
-📱 Usage
-Create a Room
-
-Click Create Room
-
-Enter room name (3–30 chars)
-
-Set strong password (8+ chars, mix case & numbers)
-
-Share invite link
-
-Join a Room
-
-Enter Room ID + password, or
-
-Just use the invite link
-
-🔧 Local Setup
-
-Clone repo:
-
+```bash
 git clone https://github.com/unbekannt01/CipherChat01.git
 cd CipherChat01
+```
 
+2. Serve frontend locally (any static server). Example:
 
-Run locally:
-
-# Option 1: Python
-python -m http.server 8000  
-
-# Option 2: Node.js
+```bash
+# Python
+python -m http.server 8000
+# or
 npx serve .
+```
 
+3. (Optional) Update WebSocket URL in `main.js` or `index.js`:
 
-Open index.html in your browser
+```js
+const wsUrl = 'https://your-websocket-server.com';
+```
 
-🌐 Browser Support
+4. Open `http://localhost:8000` in your browser.
 
-✅ Chrome / Edge / Firefox / Safari
-✅ Mobile browsers
+---
 
-🚨 Limitations
+## 🧪 Basic usage
 
-Messages cleared on server restart
+* **Create Room:** Enter a name + strong password, click Create. Share the invite link if you want others to join without entering the password.
+* **Join Room:** Use Room ID + password or the invite link.
+* **Messaging:** Send text messages only (no file uploads).
 
-Max 50 users per room
+---
 
-No file sharing (text only)
+## ⚠️ Known limitations
 
-👨‍💻 Author
+* Messages are stored in memory (lost on server restart)
+* Max users per room: \~50
+* No file sharing (text-only)
+* Session timeout: 4 hours of inactivity
+
+---
+
+## 🔧 Development notes
+
+* WebSocket server implemented with `socket.io` and a NestJS gateway.
+* Passwords must be hashed with bcrypt on the server.
+* Use an environment variable for JWT secret and server URL.
+* Keep CORS and origin checks strict in production.
+
+---
+
+## 📱 Demo
+
+* Frontend: [https://unbekannt01.github.io/CipherChat01/](https://unbekannt01.github.io/CipherChat01/)
+* Backend: deployed on Railway/Render (may sleep on free tiers)
+
+---
+
+## 👤 Author
 
 Prashant Kargathara
 
-GitHub: @unbekannt01
+* GitHub: [@unbekannt01](https://github.com/unbekannt01)
+* Email: [pkargathara7401@gmail.com](mailto:pkargathara7401@gmail.com)
 
-Email: pkargathara7401@gmail.com
-
-LinkedIn: prashant-kargathara
-
-📝 License
-
-MIT License – free to use & modify
-
-⚡ Status: Active Development | 🔒 Security First | 📱 Mobile Ready
+Tell me which section to expand or shrink (e.g., a one-file quickstart, Docker instructions, or sample env file).
