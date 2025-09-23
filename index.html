@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'; connect-src 'self' wss: ws:;">
-    <title>Secure Private Chat</title>
+    <title>CipherChat - Secure Private Chat</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
     <style>
         * {
@@ -16,10 +16,11 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
         }
 
         .app-container {
@@ -39,13 +40,70 @@
             padding: 30px;
             text-align: center;
             animation: fadeIn 0.5s ease-in;
+            overflow-y: auto;
         }
 
         .room-selection h1 {
             color: white;
             font-size: 28px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Server Status Notice */
+        .server-status-notice {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 152, 0, 0.15) 100%);
+            border: 1px solid rgba(255, 193, 7, 0.4);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.1);
+        }
+
+        .notice-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .notice-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+            animation: pulse 2s infinite;
+        }
+
+        .notice-text h3 {
+            color: #ffc107;
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .notice-text p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0 0 10px 0;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .notice-text .contact-link {
+            color: #ffc107;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .notice-text .contact-link:hover {
+            color: #ffeb3b;
+            text-decoration: underline;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .security-info {
@@ -113,6 +171,37 @@
             animation: slideDown 0.3s ease-out;
         }
 
+        /* Contact Form Styles */
+        .contact-form {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            backdrop-filter: blur(10px);
+            text-align: left;
+        }
+
+        .contact-form.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .contact-form h3 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 20px;
+            text-align: center;
+        }
+
+        .contact-form p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -152,6 +241,32 @@
         }
 
         .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 14px;
+            outline: none;
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .form-textarea:focus {
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .form-textarea::placeholder {
             color: rgba(255, 255, 255, 0.7);
         }
 
@@ -422,6 +537,17 @@
             animation: shake 0.5s ease-in-out;
         }
 
+        .success-message {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ade80;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.5s ease-in;
+        }
+
         .invite-section {
             background: rgba(74, 222, 128, 0.1);
             border: 1px solid rgba(74, 222, 128, 0.3);
@@ -493,7 +619,7 @@
             }
             to {
                 opacity: 1;
-                max-height: 300px;
+                max-height: 500px;
             }
         }
 
@@ -544,6 +670,16 @@
             .form-buttons {
                 flex-direction: column;
             }
+
+            .notice-content {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            
+            .notice-icon {
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
@@ -551,7 +687,19 @@
     <div class="app-container">
         <!-- Room Selection Screen -->
         <div class="room-selection" id="roomSelection">
-            <h1>🔐 Secure Private Chat</h1>
+            <h1>🔐 CipherChat</h1>
+            
+            <!-- Server Status Notice -->
+            <div class="server-status-notice">
+                <div class="notice-content">
+                    <div class="notice-icon">😴</div>
+                    <div class="notice-text">
+                        <h3>Server Status Update</h3>
+                        <p>Our server is currently taking a nap on the free hosting tier! If you want to chat with anyone, just try to create a room or use an invite link first.</p>
+                        <p><strong>Please wait 5-10 seconds</strong> for the server to wake up. If it doesn't respond, feel free to <span class="contact-link" onclick="showContactForm()">leave us a message here</span> and we'll get it running for you!</p>
+                    </div>
+                </div>
+            </div>
             
             <div class="security-info">
                 <h3>🛡️ Enhanced Security Features</h3>
@@ -604,6 +752,37 @@
                     <button class="btn btn-primary" onclick="joinRoom()">Join Room</button>
                     <button class="btn btn-secondary" onclick="hideForm()">Cancel</button>
                 </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="contact-form" id="contactForm">
+                <h3>📧 Contact Us</h3>
+                <p>Having trouble connecting? Let us know and we'll wake up the server for you!</p>
+                <form action="https://formsubmit.co/pkargathara7401@gmail.com" method="POST">
+                    <div class="form-group">
+                        <label for="contactName">Your Name</label>
+                        <input type="text" id="contactName" name="name" class="form-input" placeholder="Enter your name..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactEmail">Your Email</label>
+                        <input type="email" id="contactEmail" name="email" class="form-input" placeholder="Enter your email..." required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactMessage">Message</label>
+                        <textarea id="contactMessage" name="message" class="form-textarea" placeholder="Tell us what happened or when you'd like to use the chat..." required></textarea>
+                    </div>
+                    
+                    <!-- FormSubmit Configuration -->
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_subject" value="CipherChat Server Wake-up Request">
+                    <input type="hidden" name="_template" value="table">
+                    <input type="text" name="_honey" style="display:none">
+                    
+                    <div class="form-buttons">
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                        <button type="button" class="btn btn-secondary" onclick="hideForm()">Cancel</button>
+                    </div>
+                </form>
             </div>
             
             <div id="errorMessage"></div>
@@ -685,7 +864,7 @@
             
             initSocket() {
                 // Replace with your actual WebSocket server URL
-                const wsUrl = 'https://websocket-39zw.onrender.com'; // Your Railway/Render deployment URL
+                const wsUrl = 'https://websocket-39zw.onrender.com';
                 
                 this.socket = io(wsUrl, {
                     transports: ['websocket', 'polling'],
@@ -1090,6 +1269,14 @@
                     errorDiv.innerHTML = '';
                 }, 5000);
             }
+
+            showSuccess(message) {
+                const errorDiv = document.getElementById('errorMessage');
+                errorDiv.innerHTML = `<div class="success-message">${this.escapeHtml(message)}</div>`;
+                setTimeout(() => {
+                    errorDiv.innerHTML = '';
+                }, 5000);
+            }
         }
         
         let chatApp;
@@ -1105,9 +1292,15 @@
             document.getElementById('joinForm').classList.add('active');
             document.getElementById('joinRoomId').focus();
         }
+
+        function showContactForm() {
+            hideForm();
+            document.getElementById('contactForm').classList.add('active');
+            document.getElementById('contactName').focus();
+        }
         
         function hideForm() {
-            document.querySelectorAll('.room-form').forEach(form => {
+            document.querySelectorAll('.room-form, .contact-form').forEach(form => {
                 form.classList.remove('active');
             });
             document.getElementById('errorMessage').innerHTML = '';
