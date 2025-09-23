@@ -6,7 +6,10 @@
 
 ## 🚀 Quick summary
 
-CipherChat is a minimal, secure, real-time chat app built with a lightweight frontend and a WebSocket backend. Rooms can be password-protected or accessed via secure invite links. The app focuses on privacy, input sanitization, and simple developer-friendly setup.
+CipherChat is a minimal, secure, real-time chat app built with a lightweight frontend (`index.html`) and a WebSocket backend. Rooms can be password-protected or accessed via secure invite links. The app focuses on privacy, input sanitization, and simple developer-friendly setup.
+
+* **Frontend Repo (this project):** `index.html`
+* **Backend Repo:** [CipherChat WebSocket Backend](https://github.com/unbekannt01/websocket.git)
 
 ---
 
@@ -53,6 +56,8 @@ CipherChat is a minimal, secure, real-time chat app built with a lightweight fro
 
 ## ⚙️ Quick setup (local)
 
+### Frontend
+
 1. Clone repo:
 
 ```bash
@@ -76,6 +81,17 @@ const wsUrl = 'https://your-websocket-server.com';
 ```
 
 4. Open `http://localhost:8000` in your browser.
+
+### Backend
+
+Clone and set up backend separately:
+
+```bash
+git clone https://github.com/unbekannt01/websocket.git
+cd websocket
+npm install
+npm run start:dev
+```
 
 ---
 
@@ -108,7 +124,7 @@ const wsUrl = 'https://your-websocket-server.com';
 ## 📱 Demo
 
 * Frontend: [https://unbekannt01.github.io/CipherChat01/](https://unbekannt01.github.io/CipherChat01/)
-* Backend: deployed on Railway/Render (may sleep on free tiers)
+* Backend: [https://github.com/unbekannt01/websocket.git](https://github.com/unbekannt01/websocket.git)
 
 ---
 
