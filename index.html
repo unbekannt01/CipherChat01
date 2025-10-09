@@ -53,7 +53,6 @@
         text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
       }
 
-      /* Server Status Notice */
       .server-status-notice {
         background: linear-gradient(
           135deg,
@@ -93,19 +92,6 @@
         margin: 0 0 10px 0;
         line-height: 1.5;
         font-size: 14px;
-      }
-
-      .notice-text .contact-link {
-        color: #ffc107;
-        text-decoration: none;
-        font-weight: 500;
-        cursor: pointer;
-        transition: color 0.3s ease;
-      }
-
-      .notice-text .contact-link:hover {
-        color: #ffeb3b;
-        text-decoration: underline;
       }
 
       @keyframes pulse {
@@ -183,37 +169,6 @@
         animation: slideDown 0.3s ease-out;
       }
 
-      /* Contact Form Styles */
-      .contact-form {
-        display: none;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-        padding: 25px;
-        margin-top: 20px;
-        backdrop-filter: blur(10px);
-        text-align: left;
-      }
-
-      .contact-form.active {
-        display: block;
-        animation: slideDown 0.3s ease-out;
-      }
-
-      .contact-form h3 {
-        color: white;
-        margin-bottom: 15px;
-        font-size: 20px;
-        text-align: center;
-      }
-
-      .contact-form p {
-        color: rgba(255, 255, 255, 0.8);
-        margin-bottom: 20px;
-        font-size: 14px;
-        text-align: center;
-        line-height: 1.4;
-      }
-
       .form-group {
         margin-bottom: 20px;
       }
@@ -253,32 +208,6 @@
       }
 
       .form-input::placeholder {
-        color: rgba(255, 255, 255, 0.7);
-      }
-
-      .form-textarea {
-        width: 100%;
-        padding: 12px 16px;
-        border: none;
-        border-radius: 15px;
-        background: rgba(255, 255, 255, 0.2);
-        color: white;
-        font-size: 14px;
-        outline: none;
-        backdrop-filter: blur(10px);
-        border: 2px solid transparent;
-        transition: all 0.3s ease;
-        resize: vertical;
-        min-height: 80px;
-        font-family: inherit;
-      }
-
-      .form-textarea:focus {
-        border-color: rgba(255, 255, 255, 0.4);
-        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
-      }
-
-      .form-textarea::placeholder {
         color: rgba(255, 255, 255, 0.7);
       }
 
@@ -602,17 +531,6 @@
         background: rgba(74, 222, 128, 1);
       }
 
-      .typing-indicator {
-        padding: 10px 20px;
-        color: rgba(255, 255, 255, 0.7);
-        font-style: italic;
-        font-size: 14px;
-        background: rgba(255, 255, 255, 0.05);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        min-height: 40px;
-        display: none;
-      }
-
       @keyframes fadeIn {
         from {
           opacity: 0;
@@ -704,11 +622,9 @@
   </head>
   <body>
     <div class="app-container">
-      <!-- Room Selection Screen -->
       <div class="room-selection" id="roomSelection">
         <h1>🔐 CipherChat</h1>
 
-        <!-- Server Status Notice -->
         <div class="server-status-notice">
           <div class="notice-content">
             <div class="notice-icon">😴</div>
@@ -721,11 +637,7 @@
               </p>
               <p>
                 <strong>Please wait 5-10 seconds</strong> for the server to wake
-                up. If it doesn't respond, feel free to
-                <span class="contact-link" onclick="showContactForm()"
-                  >leave us a message here</span
-                >
-                and we'll get it running for you!
+                up. If it doesn't respond, the server might be sleeping!
               </p>
             </div>
           </div>
@@ -734,10 +646,8 @@
         <div class="security-info">
           <h3>🛡️ Enhanced Security Features</h3>
           <p>
-            • Password hashing & secure authentication • Rate limiting
-            protection<br />
-            • Input validation & sanitization • Session management • End-to-end
-            room isolation
+            • End-to-End Encryption (AES-256-GCM) • Password hashing & secure authentication<br />
+            • Rate limiting protection • Input validation & sanitization
           </p>
         </div>
 
@@ -759,7 +669,6 @@
           </div>
         </div>
 
-        <!-- Create Room Form -->
         <div class="room-form" id="createForm">
           <div class="form-group">
             <label for="roomName">Room Name</label>
@@ -795,7 +704,6 @@
           </div>
         </div>
 
-        <!-- Join Room Form -->
         <div class="room-form" id="joinForm">
           <div class="form-group">
             <label for="joinRoomId">Room ID</label>
@@ -828,79 +736,9 @@
           </div>
         </div>
 
-        <!-- Contact Form -->
-        <div class="contact-form" id="contactForm">
-          <h3>📧 Contact Us</h3>
-          <p>
-            Having trouble connecting? Let us know and we'll wake up the server
-            for you!
-          </p>
-          <form
-            action="https://formsubmit.co/pkargathara7401@gmail.com"
-            method="POST"
-          >
-            <div class="form-group">
-              <label for="contactName">Your Name</label>
-              <input
-                type="text"
-                id="contactName"
-                name="name"
-                class="form-input"
-                placeholder="Enter your name..."
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="contactEmail">Your Email</label>
-              <input
-                type="email"
-                id="contactEmail"
-                name="email"
-                class="form-input"
-                placeholder="Enter your email..."
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="contactMessage">Message</label>
-              <textarea
-                id="contactMessage"
-                name="message"
-                class="form-textarea"
-                placeholder="Tell us what happened or when you'd like to use the chat..."
-                required
-              ></textarea>
-            </div>
-
-            <!-- FormSubmit Configuration -->
-            <input type="hidden" name="_captcha" value="false" />
-            <input
-              type="hidden"
-              name="_subject"
-              value="CipherChat Server Wake-up Request"
-            />
-            <input type="hidden" name="_template" value="table" />
-            <input type="text" name="_honey" style="display: none" />
-
-            <div class="form-buttons">
-              <button type="submit" class="btn btn-primary">
-                Send Message
-              </button>
-              <button
-                type="button"
-                class="btn btn-secondary"
-                onclick="hideForm()"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-
         <div id="errorMessage"></div>
       </div>
 
-      <!-- Chat Interface -->
       <div class="chat-container" id="chatContainer">
         <div class="chat-header">
           <div class="chat-info">
@@ -945,8 +783,6 @@
           </div>
         </div>
 
-        <div class="typing-indicator" id="typingIndicator"></div>
-
         <div class="input-section">
           <div class="input-container">
             <input
@@ -964,24 +800,15 @@
     </div>
 
     <script>
-      /**
-       * End-to-End Encryption Helper for Chat Client
-       * Uses Web Crypto API for strong encryption
-       */
-
       class E2ECryptoManager {
         constructor() {
           this.keyPair = null;
-          this.roomKeys = new Map(); // roomId -> shared symmetric key
-          this.memberPublicKeys = new Map(); // memberId -> public key
+          this.roomKeys = new Map();
+          this.memberPublicKeys = new Map();
         }
 
-        /**
-         * Initialize crypto - generate key pair for this user
-         */
         async initialize() {
           try {
-            // Generate RSA-OAEP key pair for asymmetric encryption
             this.keyPair = await window.crypto.subtle.generateKey(
               {
                 name: 'RSA-OAEP',
@@ -992,7 +819,6 @@
               true,
               ['encrypt', 'decrypt'],
             );
-
             console.log('🔐 Crypto keys generated successfully');
             return true;
           } catch (error) {
@@ -1001,43 +827,17 @@
           }
         }
 
-        /**
-         * Export public key to send to server
-         */
         async exportPublicKey() {
           if (!this.keyPair) {
             throw new Error('Key pair not initialized');
           }
-
           const exported = await window.crypto.subtle.exportKey(
             'spki',
             this.keyPair.publicKey,
           );
-
           return this.arrayBufferToBase64(exported);
         }
 
-        /**
-         * Import a public key from another user
-         */
-        async importPublicKey(base64Key) {
-          const keyData = this.base64ToArrayBuffer(base64Key);
-
-          return await window.crypto.subtle.importKey(
-            'spki',
-            keyData,
-            {
-              name: 'RSA-OAEP',
-              hash: 'SHA-256',
-            },
-            true,
-            ['encrypt'],
-          );
-        }
-
-        /**
-         * Generate a shared symmetric key for a room
-         */
         async generateRoomKey(roomId) {
           const key = await window.crypto.subtle.generateKey(
             {
@@ -1047,19 +847,14 @@
             true,
             ['encrypt', 'decrypt'],
           );
-
           this.roomKeys.set(roomId, key);
           return key;
         }
 
-        /**
-         * Encrypt a message for a room using symmetric encryption
-         */
         async encryptMessage(roomId, message) {
           if (!this.roomKeys.has(roomId)) {
             await this.generateRoomKey(roomId);
           }
-
           const key = this.roomKeys.get(roomId);
           const iv = window.crypto.getRandomValues(new Uint8Array(12));
           const encodedMessage = new TextEncoder().encode(message);
@@ -1079,14 +874,10 @@
           };
         }
 
-        /**
-         * Decrypt a message from a room
-         */
         async decryptMessage(roomId, encryptedContent, iv) {
           if (!this.roomKeys.has(roomId)) {
             throw new Error('Room key not found');
           }
-
           const key = this.roomKeys.get(roomId);
           const encryptedData = this.base64ToArrayBuffer(encryptedContent);
           const ivData = this.base64ToArrayBuffer(iv);
@@ -1100,7 +891,6 @@
               key,
               encryptedData,
             );
-
             return new TextDecoder().decode(decryptedData);
           } catch (error) {
             console.error('Decryption failed:', error);
@@ -1108,155 +898,11 @@
           }
         }
 
-        /**
-         * Encrypt the room key with a member's public key
-         * Used to share room key with new members
-         */
-        async encryptRoomKeyForMember(roomId, memberPublicKeyBase64) {
-          if (!this.roomKeys.has(roomId)) {
-            throw new Error('Room key not found');
-          }
-
-          const roomKey = this.roomKeys.get(roomId);
-          const memberPublicKey = await this.importPublicKey(
-            memberPublicKeyBase64,
-          );
-
-          // Export room key as raw data
-          const roomKeyData = await window.crypto.subtle.exportKey(
-            'raw',
-            roomKey,
-          );
-
-          // Encrypt with member's public key
-          const encryptedRoomKey = await window.crypto.subtle.encrypt(
-            {
-              name: 'RSA-OAEP',
-            },
-            memberPublicKey,
-            roomKeyData,
-          );
-
-          return this.arrayBufferToBase64(encryptedRoomKey);
-        }
-
-        /**
-         * Decrypt a room key encrypted with our public key
-         */
-        async decryptRoomKey(roomId, encryptedRoomKeyBase64) {
-          if (!this.keyPair) {
-            throw new Error('Key pair not initialized');
-          }
-
-          const encryptedRoomKey = this.base64ToArrayBuffer(
-            encryptedRoomKeyBase64,
-          );
-
-          // Decrypt with our private key
-          const roomKeyData = await window.crypto.subtle.decrypt(
-            {
-              name: 'RSA-OAEP',
-            },
-            this.keyPair.privateKey,
-            encryptedRoomKey,
-          );
-
-          // Import as AES key
-          const roomKey = await window.crypto.subtle.importKey(
-            'raw',
-            roomKeyData,
-            {
-              name: 'AES-GCM',
-            },
-            true,
-            ['encrypt', 'decrypt'],
-          );
-
-          this.roomKeys.set(roomId, roomKey);
-          return roomKey;
-        }
-
-        /**
-         * Sign a message for authenticity verification
-         */
-        async signMessage(message) {
-          // Generate signing key pair if not exists
-          if (!this.signingKeyPair) {
-            this.signingKeyPair = await window.crypto.subtle.generateKey(
-              {
-                name: 'RSASSA-PKCS1-v1_5',
-                modulusLength: 2048,
-                publicExponent: new Uint8Array([1, 0, 1]),
-                hash: 'SHA-256',
-              },
-              true,
-              ['sign', 'verify'],
-            );
-          }
-
-          const encodedMessage = new TextEncoder().encode(message);
-          const signature = await window.crypto.subtle.sign(
-            'RSASSA-PKCS1-v1_5',
-            this.signingKeyPair.privateKey,
-            encodedMessage,
-          );
-
-          return this.arrayBufferToBase64(signature);
-        }
-
-        /**
-         * Verify message signature
-         */
-        async verifySignature(message, signatureBase64, publicKeyBase64) {
-          const signature = this.base64ToArrayBuffer(signatureBase64);
-          const encodedMessage = new TextEncoder().encode(message);
-
-          // Import verification key
-          const keyData = this.base64ToArrayBuffer(publicKeyBase64);
-          const verifyKey = await window.crypto.subtle.importKey(
-            'spki',
-            keyData,
-            {
-              name: 'RSASSA-PKCS1-v1_5',
-              hash: 'SHA-256',
-            },
-            true,
-            ['verify'],
-          );
-
-          return await window.crypto.subtle.verify(
-            'RSASSA-PKCS1-v1_5',
-            verifyKey,
-            signature,
-            encodedMessage,
-          );
-        }
-
-        /**
-         * Store member public keys
-         */
-        storeMemberPublicKey(memberId, publicKey) {
-          this.memberPublicKeys.set(memberId, publicKey);
-        }
-
-        /**
-         * Get member public key
-         */
-        getMemberPublicKey(memberId) {
-          return this.memberPublicKeys.get(memberId);
-        }
-
-        /**
-         * Clear room keys and member keys (for leaving room)
-         */
         clearRoomData(roomId) {
           this.roomKeys.delete(roomId);
           console.log(`🗑️ Cleared encryption data for room ${roomId}`);
         }
 
-        /**
-         * Utility: Convert ArrayBuffer to Base64
-         */
         arrayBufferToBase64(buffer) {
           const bytes = new Uint8Array(buffer);
           let binary = '';
@@ -1266,9 +912,6 @@
           return window.btoa(binary);
         }
 
-        /**
-         * Utility: Convert Base64 to ArrayBuffer
-         */
         base64ToArrayBuffer(base64) {
           const binary = window.atob(base64);
           const bytes = new Uint8Array(binary.length);
@@ -1277,28 +920,8 @@
           }
           return bytes.buffer;
         }
-
-        /**
-         * Generate a secure random password for room
-         */
-        generateSecurePassword(length = 16) {
-          const charset =
-            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
-          const randomValues = new Uint8Array(length);
-          window.crypto.getRandomValues(randomValues);
-
-          let password = '';
-          for (let i = 0; i < length; i++) {
-            password += charset[randomValues[i] % charset.length];
-          }
-          return password;
-        }
       }
 
-      // Export for use in your application
-      if (typeof module !== 'undefined' && module.exports) {
-        module.exports = E2ECryptoManager;
-      }
       class SecureChatApp {
         constructor() {
           this.socket = null;
@@ -1309,11 +932,21 @@
           this.reconnectAttempts = 0;
           this.maxReconnectAttempts = 5;
           this.messageQueue = [];
+          this.cryptoManager = new E2ECryptoManager();
 
           this.initElements();
-          this.initSocket();
-          this.bindEvents();
-          this.checkUrlParams();
+          this.initCrypto();
+        }
+
+        async initCrypto() {
+          const initialized = await this.cryptoManager.initialize();
+          if (initialized) {
+            this.initSocket();
+            this.bindEvents();
+            this.checkUrlParams();
+          } else {
+            this.showError('Failed to initialize encryption. Please refresh the page.');
+          }
         }
 
         initElements() {
@@ -1328,11 +961,9 @@
           this.roomIdDisplay = document.getElementById('roomIdDisplay');
           this.inviteSection = document.getElementById('inviteSection');
           this.inviteLink = document.getElementById('inviteLink');
-          this.typingIndicator = document.getElementById('typingIndicator');
         }
 
         initSocket() {
-          // Replace with your actual WebSocket server URL
           const wsUrl = 'https://websocket-production-b537.up.railway.app';
 
           this.socket = io(wsUrl, {
@@ -1344,15 +975,21 @@
             reconnectionDelay: 1000,
           });
 
-          this.socket.on('connect', () => {
+          this.socket.on('connect', async () => {
             this.isConnected = true;
             this.reconnectAttempts = 0;
+
+            // Register public key with server
+            try {
+              const publicKey = await this.cryptoManager.exportPublicKey();
+              this.socket.emit('register-public-key', { publicKey });
+            } catch (error) {
+              console.error('Failed to register public key:', error);
+            }
 
             if (this.currentRoom) {
               this.updateStatus('Connected 🔒', 'connected');
             }
-
-            // Process queued messages
             this.processMessageQueue();
           });
 
@@ -1380,6 +1017,16 @@
             console.log('Session initialized');
           });
 
+          this.socket.on('key-registered', (data) => {
+            if (data.success) {
+              console.log('✅ Public key registered with server');
+            }
+          });
+
+          this.socket.on('key-error', (data) => {
+            console.error('Key registration error:', data.message);
+          });
+
           this.socket.on('room-created', (data) => {
             this.joinChatRoom(
               data.roomId,
@@ -1402,9 +1049,8 @@
             this.showError(data.message);
           });
 
-          this.socket.on('rate-limit', (data) => {
-            this.showError(data.message);
-            this.addErrorMessage('Rate limit exceeded. Please slow down.');
+          this.socket.on('room-warning', (data) => {
+            console.warn(data.message);
           });
 
           this.socket.on('user-joined', (data) => {
@@ -1415,8 +1061,31 @@
             this.addSystemMessage(data.message);
           });
 
-          this.socket.on('room-message', (data) => {
-            this.addMessage(data, false);
+          this.socket.on('encrypted-message', async (data) => {
+            if (data.senderId === this.socket.id) {
+              // This is our own message echoed back - skip it
+              return;
+            }
+            
+            try {
+              const decryptedText = await this.cryptoManager.decryptMessage(
+                data.roomId,
+                data.encryptedContent,
+                data.iv
+              );
+              
+              const messageData = {
+                roomId: data.roomId,
+                username: data.username,
+                text: decryptedText,
+                timestamp: data.timestamp,
+              };
+              
+              this.addMessage(messageData, false);
+            } catch (error) {
+              console.error('Failed to decrypt message:', error);
+              this.addErrorMessage('Failed to decrypt a message');
+            }
           });
 
           this.socket.on('room-info', (data) => {
@@ -1425,12 +1094,10 @@
         }
 
         bindEvents() {
-          // Username input with validation
           this.usernameInput.addEventListener('input', (e) => {
             const value = e.target.value;
             this.username = this.sanitizeInput(value, 20);
 
-            // Update input field if sanitized
             if (this.username !== value) {
               e.target.value = this.username;
             }
@@ -1444,17 +1111,14 @@
             }
           });
 
-          // Message input with validation
           this.messageInput.addEventListener('input', (e) => {
             const value = e.target.value;
 
-            // Check message length
             if (value.length > 1000) {
               e.target.value = value.substring(0, 1000);
               this.showError('Message too long (max 1000 characters)');
             }
 
-            // Basic content validation
             if (this.containsSuspiciousContent(value)) {
               this.showError('Message contains inappropriate content');
             }
@@ -1471,22 +1135,14 @@
             this.sendMessage();
           });
 
-          // Enhanced form validation
           this.bindFormValidation();
 
-          // Handle page visibility change (for security)
           document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-              // User switched away - could pause some operations
-            } else {
-              // User came back - refresh session if needed
-              if (this.currentRoom && this.isConnected) {
-                this.refreshSession();
-              }
+            if (!document.hidden && this.currentRoom && this.isConnected) {
+              this.refreshSession();
             }
           });
 
-          // Handle form submissions with Enter key
           document.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
               const activeForm = document.querySelector('.room-form.active');
@@ -1557,11 +1213,9 @@
 
           if (roomId && token) {
             document.getElementById('joinRoomId').value = roomId;
-            // Store token for use in join process
             this.inviteToken = token;
             showJoinForm();
 
-            // Clear URL for security
             const url = new URL(window.location);
             url.search = '';
             window.history.replaceState({}, document.title, url);
@@ -1588,12 +1242,11 @@
           }
         }
 
-        sendMessage() {
+        async sendMessage() {
           const text = this.messageInput.value.trim();
           if (!text || !this.username || !this.isConnected || !this.currentRoom)
             return;
 
-          // Additional client-side validation
           if (text.length > 1000) {
             this.showError('Message too long');
             return;
@@ -1604,29 +1257,47 @@
             return;
           }
 
-          const messageData = {
-            roomId: this.currentRoom.id,
-            username: this.username,
-            text: text,
-            timestamp: new Date().toISOString(),
-          };
+          try {
+            // Encrypt the message
+            const { encryptedContent, iv } = await this.cryptoManager.encryptMessage(
+              this.currentRoom.id,
+              text
+            );
 
-          if (this.isConnected) {
-            this.socket.emit('room-message', messageData);
-            this.addMessage(messageData, true);
-          } else {
-            // Queue message for when connection is restored
-            this.messageQueue.push(messageData);
-            this.addSystemMessage('Message queued - will send when connected');
+            const messageData = {
+              roomId: this.currentRoom.id,
+              username: this.username,
+              encryptedContent: encryptedContent,
+              iv: iv,
+              timestamp: new Date().toISOString(),
+            };
+
+            if (this.isConnected) {
+              this.socket.emit('encrypted-message', messageData);
+              
+              // Add our own message to the chat immediately
+              this.addMessage({
+                roomId: this.currentRoom.id,
+                username: this.username,
+                text: text,
+                timestamp: messageData.timestamp,
+              }, true);
+            } else {
+              this.messageQueue.push(messageData);
+              this.addSystemMessage('Message queued - will send when connected');
+            }
+
+            this.messageInput.value = '';
+          } catch (error) {
+            console.error('Failed to encrypt message:', error);
+            this.showError('Failed to encrypt message');
           }
-
-          this.messageInput.value = '';
         }
 
         processMessageQueue() {
           while (this.messageQueue.length > 0 && this.isConnected) {
             const message = this.messageQueue.shift();
-            this.socket.emit('room-message', message);
+            this.socket.emit('encrypted-message', message);
           }
         }
 
@@ -1650,7 +1321,7 @@
               '🎉 Room created successfully! Share the secure invite link with others.',
             );
           } else {
-            this.addSystemMessage(`🚀 Welcome to ${roomName}!`);
+            this.addSystemMessage(`🚀 Welcome to ${roomName}! Messages are end-to-end encrypted.`);
           }
 
           this.updateStatus('Connected 🔒', 'connected');
@@ -1676,9 +1347,9 @@
           });
 
           messageEl.innerHTML = `
-                    <div class="message-info">${this.escapeHtml(data.username)} • ${time}</div>
-                    <div class="message-text">${this.escapeHtml(data.text)}</div>
-                `;
+            <div class="message-info">${this.escapeHtml(data.username)} • ${time}</div>
+            <div class="message-text">${this.escapeHtml(data.text)}</div>
+          `;
 
           this.messagesContainer.appendChild(messageEl);
           this.scrollToBottom();
@@ -1724,8 +1395,8 @@
           if (!input || typeof input !== 'string') return '';
 
           return input
-            .replace(/[<>\"'&]/g, '') // Remove potentially dangerous characters
-            .replace(/\s+/g, ' ') // Normalize whitespace
+            .replace(/[<>\"'&]/g, '')
+            .replace(/\s+/g, ' ')
             .trim()
             .substring(0, maxLength);
         }
@@ -1746,9 +1417,7 @@
         }
 
         refreshSession() {
-          // Simple session refresh - in a real app, you might want more sophisticated logic
           if (this.socket && this.isConnected) {
-            // Emit a keepalive or session refresh event if your backend supports it
             console.log('Session refreshed');
           }
         }
@@ -1784,15 +1453,9 @@
         document.getElementById('joinRoomId').focus();
       }
 
-      function showContactForm() {
-        hideForm();
-        document.getElementById('contactForm').classList.add('active');
-        document.getElementById('contactName').focus();
-      }
-
       function hideForm() {
         document
-          .querySelectorAll('.room-form, .contact-form')
+          .querySelectorAll('.room-form')
           .forEach((form) => {
             form.classList.remove('active');
           });
@@ -1808,7 +1471,6 @@
           return;
         }
 
-        // Enhanced validation
         if (roomName.length < 3 || roomName.length > 30) {
           chatApp.showError('Room name must be between 3 and 30 characters');
           return;
@@ -1845,15 +1507,13 @@
           return;
         }
 
-        // Sanitize room ID
         const sanitizedRoomId = chatApp.sanitizeInput(roomId, 20);
 
         const joinData = { roomId: sanitizedRoomId };
 
-        // Use invite token if available, otherwise use password
         if (chatApp.inviteToken) {
           joinData.inviteToken = chatApp.inviteToken;
-          chatApp.inviteToken = null; // Clear after use
+          chatApp.inviteToken = null;
         } else if (password) {
           joinData.password = password;
         } else {
@@ -1867,6 +1527,7 @@
       function leaveRoom() {
         if (chatApp.currentRoom) {
           chatApp.socket.emit('leave-room', { roomId: chatApp.currentRoom.id });
+          chatApp.cryptoManager.clearRoomData(chatApp.currentRoom.id);
         }
 
         chatApp.currentRoom = null;
@@ -1882,7 +1543,6 @@
 
         hideForm();
 
-        // Clear URL parameters
         const url = new URL(window.location);
         url.search = '';
         window.history.replaceState({}, document.title, url);
@@ -1894,7 +1554,6 @@
         const link = document.getElementById('inviteLink').textContent;
 
         if (navigator.clipboard && window.isSecureContext) {
-          // Use modern clipboard API
           navigator.clipboard
             .writeText(link)
             .then(() => {
@@ -1905,7 +1564,6 @@
               fallbackCopy(link);
             });
         } else {
-          // Fallback for older browsers or non-secure contexts
           fallbackCopy(link);
         }
       }
@@ -1942,9 +1600,7 @@
         }, 2000);
       }
 
-      // Initialize the secure chat app when the page loads
       window.addEventListener('DOMContentLoaded', () => {
-        // Security check - ensure we're running in a secure context for sensitive operations
         if (
           location.protocol !== 'https:' &&
           location.hostname !== 'localhost'
@@ -1957,50 +1613,13 @@
         chatApp = new SecureChatApp();
       });
 
-      // Additional security measures
       window.addEventListener('beforeunload', (e) => {
-        // Clean up session data before page unload
         if (chatApp && chatApp.currentRoom) {
-          // Optionally notify server of clean disconnect
           chatApp.socket?.emit('leave-room', {
             roomId: chatApp.currentRoom.id,
           });
         }
       });
-
-      // Prevent right-click context menu on sensitive elements (optional)
-      document.addEventListener('contextmenu', (e) => {
-        if (
-          e.target.classList.contains('invite-link') ||
-          e.target.classList.contains('room-id')
-        ) {
-          e.preventDefault();
-        }
-      });
-
-      // Basic protection against developer tools (not foolproof, just a deterrent)
-      if (location.hostname !== 'localhost') {
-        let devtools = { open: false, orientation: null };
-        const threshold = 160;
-
-        setInterval(() => {
-          if (
-            window.outerHeight - window.innerHeight > threshold ||
-            window.outerWidth - window.innerWidth > threshold
-          ) {
-            if (!devtools.open) {
-              devtools.open = true;
-              console.clear();
-              console.log(
-                '%c🔒 This is a secure chat application. Please do not tamper with the code.',
-                'color: red; font-size: 16px; font-weight: bold;',
-              );
-            }
-          } else {
-            devtools.open = false;
-          }
-        }, 500);
-      }
     </script>
   </body>
 </html>
