@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -17,7 +17,7 @@
       }
 
       body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         min-height: 100vh;
         display: flex;
@@ -646,7 +646,8 @@
         <div class="security-info">
           <h3>🛡️ Enhanced Security Features</h3>
           <p>
-            • End-to-End Encryption (AES-256-GCM) • Password hashing & secure authentication<br />
+            • End-to-End Encryption (AES-256-GCM) • Password hashing & secure
+            authentication<br />
             • Rate limiting protection • Input validation & sanitization
           </p>
         </div>
@@ -811,29 +812,27 @@
           try {
             this.keyPair = await window.crypto.subtle.generateKey(
               {
-                name: 'RSA-OAEP',
+                name: "RSA-OAEP",
                 modulusLength: 2048,
                 publicExponent: new Uint8Array([1, 0, 1]),
-                hash: 'SHA-256',
+                hash: "SHA-256",
               },
               true,
-              ['encrypt', 'decrypt'],
+              ["encrypt", "decrypt"]
             );
-            console.log('🔐 Crypto keys generated successfully');
             return true;
           } catch (error) {
-            console.error('Failed to initialize crypto:', error);
             return false;
           }
         }
 
         async exportPublicKey() {
           if (!this.keyPair) {
-            throw new Error('Key pair not initialized');
+            throw new Error("Key pair not initialized");
           }
           const exported = await window.crypto.subtle.exportKey(
-            'spki',
-            this.keyPair.publicKey,
+            "spki",
+            this.keyPair.publicKey
           );
           return this.arrayBufferToBase64(exported);
         }
@@ -843,22 +842,25 @@
           // This ensures all users in the same room get the same key
           const encoder = new TextEncoder();
           const roomIdData = encoder.encode(roomId);
-          
+
           // Hash the room ID to get key material
-          const hashBuffer = await window.crypto.subtle.digest('SHA-256', roomIdData);
-          
+          const hashBuffer = await window.crypto.subtle.digest(
+            "SHA-256",
+            roomIdData
+          );
+
           // Import as AES key
           const key = await window.crypto.subtle.importKey(
-            'raw',
+            "raw",
             hashBuffer,
             {
-              name: 'AES-GCM',
+              name: "AES-GCM",
               length: 256,
             },
             true,
-            ['encrypt', 'decrypt']
+            ["encrypt", "decrypt"]
           );
-          
+
           this.roomKeys.set(roomId, key);
           console.log(`🔑 Generated deterministic room key for ${roomId}`);
           return key;
@@ -867,21 +869,21 @@
         async encryptMessage(roomId, message) {
           // Ensure room key exists
           if (!this.roomKeys.has(roomId)) {
-            console.log('Room key not found, generating...');
+            console.log("Room key not found, generating...");
             await this.generateRoomKey(roomId);
           }
-          
+
           const key = this.roomKeys.get(roomId);
           const iv = window.crypto.getRandomValues(new Uint8Array(12));
           const encodedMessage = new TextEncoder().encode(message);
 
           const encryptedData = await window.crypto.subtle.encrypt(
             {
-              name: 'AES-GCM',
+              name: "AES-GCM",
               iv: iv,
             },
             key,
-            encodedMessage,
+            encodedMessage
           );
 
           return {
@@ -893,10 +895,10 @@
         async decryptMessage(roomId, encryptedContent, iv) {
           // Ensure room key exists
           if (!this.roomKeys.has(roomId)) {
-            console.log('Room key not found for decryption, generating...');
+            console.log("Room key not found for decryption, generating...");
             await this.generateRoomKey(roomId);
           }
-          
+
           const key = this.roomKeys.get(roomId);
           const encryptedData = this.base64ToArrayBuffer(encryptedContent);
           const ivData = this.base64ToArrayBuffer(iv);
@@ -904,33 +906,32 @@
           try {
             const decryptedData = await window.crypto.subtle.decrypt(
               {
-                name: 'AES-GCM',
+                name: "AES-GCM",
                 iv: ivData,
               },
               key,
-              encryptedData,
+              encryptedData
             );
             return new TextDecoder().decode(decryptedData);
           } catch (error) {
-            console.error('Decryption failed:', error);
-            console.error('Key info:', {
+            console.error("Decryption failed:", error);
+            console.error("Key info:", {
               hasKey: this.roomKeys.has(roomId),
               roomId: roomId,
               ivLength: ivData.byteLength,
-              encryptedLength: encryptedData.byteLength
+              encryptedLength: encryptedData.byteLength,
             });
-            throw new Error('Failed to decrypt message');
+            throw new Error("Failed to decrypt message");
           }
         }
 
         clearRoomData(roomId) {
           this.roomKeys.delete(roomId);
-          console.log(`🗑️ Cleared encryption data for room ${roomId}`);
         }
 
         arrayBufferToBase64(buffer) {
           const bytes = new Uint8Array(buffer);
-          let binary = '';
+          let binary = "";
           for (let i = 0; i < bytes.byteLength; i++) {
             binary += String.fromCharCode(bytes[i]);
           }
@@ -950,7 +951,7 @@
       class SecureChatApp {
         constructor() {
           this.socket = null;
-          this.username = '';
+          this.username = "";
           this.currentRoom = null;
           this.isConnected = false;
           this.sessionToken = null;
@@ -970,29 +971,31 @@
             this.bindEvents();
             this.checkUrlParams();
           } else {
-            this.showError('Failed to initialize encryption. Please refresh the page.');
+            this.showError(
+              "Failed to initialize encryption. Please refresh the page."
+            );
           }
         }
 
         initElements() {
-          this.roomSelection = document.getElementById('roomSelection');
-          this.chatContainer = document.getElementById('chatContainer');
-          this.statusEl = document.getElementById('status');
-          this.usernameInput = document.getElementById('usernameInput');
-          this.messagesContainer = document.getElementById('messagesContainer');
-          this.messageInput = document.getElementById('messageInput');
-          this.sendButton = document.getElementById('sendButton');
-          this.roomTitle = document.getElementById('roomTitle');
-          this.roomIdDisplay = document.getElementById('roomIdDisplay');
-          this.inviteSection = document.getElementById('inviteSection');
-          this.inviteLink = document.getElementById('inviteLink');
+          this.roomSelection = document.getElementById("roomSelection");
+          this.chatContainer = document.getElementById("chatContainer");
+          this.statusEl = document.getElementById("status");
+          this.usernameInput = document.getElementById("usernameInput");
+          this.messagesContainer = document.getElementById("messagesContainer");
+          this.messageInput = document.getElementById("messageInput");
+          this.sendButton = document.getElementById("sendButton");
+          this.roomTitle = document.getElementById("roomTitle");
+          this.roomIdDisplay = document.getElementById("roomIdDisplay");
+          this.inviteSection = document.getElementById("inviteSection");
+          this.inviteLink = document.getElementById("inviteLink");
         }
 
         initSocket() {
-          const wsUrl = 'https://websocket-production-b537.up.railway.app';
+          const wsUrl = "https://websocket-production-b537.up.railway.app";
 
           this.socket = io(wsUrl, {
-            transports: ['websocket', 'polling'],
+            transports: ["websocket", "polling"],
             upgrade: true,
             timeout: 20000,
             reconnection: true,
@@ -1000,146 +1003,142 @@
             reconnectionDelay: 1000,
           });
 
-          this.socket.on('connect', async () => {
+          this.socket.on("connect", async () => {
             this.isConnected = true;
             this.reconnectAttempts = 0;
 
             // Register public key with server
             try {
               const publicKey = await this.cryptoManager.exportPublicKey();
-              this.socket.emit('register-public-key', { publicKey });
+              this.socket.emit("register-public-key", { publicKey });
             } catch (error) {
-              console.error('Failed to register public key:', error);
+              console.error("Failed to register public key:", error);
             }
 
             if (this.currentRoom) {
-              this.updateStatus('Connected 🔒', 'connected');
+              this.updateStatus("Connected 🔒", "connected");
             }
             this.processMessageQueue();
           });
 
-          this.socket.on('disconnect', () => {
+          this.socket.on("disconnect", () => {
             this.isConnected = false;
-            this.updateStatus('Disconnected 💔', 'disconnected');
+            this.updateStatus("Disconnected 💔", "disconnected");
             this.messageInput.disabled = true;
             this.sendButton.disabled = true;
           });
 
-          this.socket.on('connect_error', (error) => {
-            console.error('Connection error:', error);
-            this.updateStatus('Connection Error ⚠️', 'disconnected');
+          this.socket.on("connect_error", (error) => {
+            this.updateStatus("Connection Error ⚠️", "disconnected");
           });
 
-          this.socket.on('reconnect_attempt', (attemptNumber) => {
+          this.socket.on("reconnect_attempt", (attemptNumber) => {
             this.updateStatus(
               `Reconnecting... (${attemptNumber}/${this.maxReconnectAttempts})`,
-              'connecting',
+              "connecting"
             );
           });
 
-          this.socket.on('session-initialized', (data) => {
+          this.socket.on("session-initialized", (data) => {
             this.sessionToken = data.sessionToken;
-            console.log('Session initialized');
           });
 
-          this.socket.on('key-registered', (data) => {
-            if (data.success) {
-              console.log('✅ Public key registered with server');
-            }
+          this.socket.on("key-registered", (data) => {
+            // Key registered successfully
           });
 
-          this.socket.on('key-error', (data) => {
-            console.error('Key registration error:', data.message);
+          this.socket.on("key-error", (data) => {
+            // Handle key error silently
           });
 
-          this.socket.on('room-created', async (data) => {
+          this.socket.on("room-created", async (data) => {
             // Creator generates the room key
             await this.cryptoManager.generateRoomKey(data.roomId);
-            console.log('🔑 Room key generated for new room');
-            
+            console.log("🔑 Room key generated for new room");
+
             this.joinChatRoom(
               data.roomId,
               data.roomName,
               true,
-              data.inviteToken,
+              data.inviteToken
             );
           });
 
-          this.socket.on('room-joined', async (data) => {
+          this.socket.on("room-joined", async (data) => {
             // Joiner also generates the same room key (simplified approach)
             await this.cryptoManager.generateRoomKey(data.roomId);
-            console.log('🔑 Room key generated for joined room');
-            
+            console.log("🔑 Room key generated for joined room");
+
             this.joinChatRoom(
               data.roomId,
               data.roomName,
               false,
-              data.inviteToken,
+              data.inviteToken
             );
           });
 
-          this.socket.on('room-error', (data) => {
+          this.socket.on("room-error", (data) => {
             this.showError(data.message);
           });
 
-          this.socket.on('room-warning', (data) => {
-            console.warn(data.message);
+          this.socket.on("room-warning", (data) => {
+            // Handle warning silently
           });
 
-          this.socket.on('user-joined', (data) => {
+          this.socket.on("user-joined", (data) => {
             this.addSystemMessage(data.message);
           });
 
-          this.socket.on('user-left', (data) => {
+          this.socket.on("user-left", (data) => {
             this.addSystemMessage(data.message);
           });
 
-          this.socket.on('encrypted-message', async (data) => {
+          this.socket.on("encrypted-message", async (data) => {
             // Skip our own messages - we already added them
             if (data.senderId === this.socket.id) {
               return;
             }
-            
+
             try {
               // Ensure we have a room key before attempting decryption
               if (!this.cryptoManager.roomKeys.has(data.roomId)) {
-                console.log('Generating room key for received message...');
+                console.log("Generating room key for received message...");
                 await this.cryptoManager.generateRoomKey(data.roomId);
               }
-              
+
               const decryptedText = await this.cryptoManager.decryptMessage(
                 data.roomId,
                 data.encryptedContent,
                 data.iv
               );
-              
+
               const messageData = {
                 roomId: data.roomId,
                 username: data.username,
                 text: decryptedText,
                 timestamp: data.timestamp,
               };
-              
+
               this.addMessage(messageData, false);
             } catch (error) {
-              console.error('Failed to decrypt message:', error);
-              console.error('Error details:', {
+              console.error("Failed to decrypt message:", error);
+              console.error("Error details:", {
                 roomId: data.roomId,
                 hasKey: this.cryptoManager.roomKeys.has(data.roomId),
                 senderId: data.senderId,
-                myId: this.socket.id
+                myId: this.socket.id,
               });
-              this.addErrorMessage('Failed to decrypt a message');
+              this.addErrorMessage("Failed to decrypt a message");
             }
           });
 
-          this.socket.on('room-info', (data) => {
-            console.log('Room info:', data);
+          this.socket.on("room-info", (data) => {
+            // Handle room info silently
           });
         }
 
         bindEvents() {
-          this.usernameInput.addEventListener('input', (e) => {
+          this.usernameInput.addEventListener("input", (e) => {
             const value = e.target.value;
             this.username = this.sanitizeInput(value, 20);
 
@@ -1150,51 +1149,51 @@
             this.updateInputState();
           });
 
-          this.usernameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && this.username) {
+          this.usernameInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter" && this.username) {
               this.messageInput.focus();
             }
           });
 
-          this.messageInput.addEventListener('input', (e) => {
+          this.messageInput.addEventListener("input", (e) => {
             const value = e.target.value;
 
             if (value.length > 1000) {
               e.target.value = value.substring(0, 1000);
-              this.showError('Message too long (max 1000 characters)');
+              this.showError("Message too long (max 1000 characters)");
             }
 
             if (this.containsSuspiciousContent(value)) {
-              this.showError('Message contains inappropriate content');
+              this.showError("Message contains inappropriate content");
             }
           });
 
-          this.messageInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
+          this.messageInput.addEventListener("keypress", (e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
               e.preventDefault();
               this.sendMessage();
             }
           });
 
-          this.sendButton.addEventListener('click', () => {
+          this.sendButton.addEventListener("click", () => {
             this.sendMessage();
           });
 
           this.bindFormValidation();
 
-          document.addEventListener('visibilitychange', () => {
+          document.addEventListener("visibilitychange", () => {
             if (!document.hidden && this.currentRoom && this.isConnected) {
               this.refreshSession();
             }
           });
 
-          document.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-              const activeForm = document.querySelector('.room-form.active');
+          document.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+              const activeForm = document.querySelector(".room-form.active");
               if (activeForm) {
-                if (activeForm.id === 'createForm') {
+                if (activeForm.id === "createForm") {
                   createRoom();
-                } else if (activeForm.id === 'joinForm') {
+                } else if (activeForm.id === "joinForm") {
                   joinRoom();
                 }
               }
@@ -1203,14 +1202,14 @@
         }
 
         bindFormValidation() {
-          const roomNameInput = document.getElementById('roomName');
-          const roomPasswordInput = document.getElementById('roomPassword');
+          const roomNameInput = document.getElementById("roomName");
+          const roomPasswordInput = document.getElementById("roomPassword");
 
-          roomNameInput.addEventListener('input', (e) => {
+          roomNameInput.addEventListener("input", (e) => {
             this.validateRoomName(e.target);
           });
 
-          roomPasswordInput.addEventListener('input', (e) => {
+          roomPasswordInput.addEventListener("input", (e) => {
             this.validatePassword(e.target);
           });
         }
@@ -1223,12 +1222,12 @@
             value.length <= 30 &&
             /^[a-zA-Z0-9\s\-_\.]+$/.test(value)
           ) {
-            input.classList.add('input-valid');
-            input.classList.remove('input-invalid');
+            input.classList.add("input-valid");
+            input.classList.remove("input-invalid");
             return true;
           } else {
-            input.classList.add('input-invalid');
-            input.classList.remove('input-valid');
+            input.classList.add("input-invalid");
+            input.classList.remove("input-valid");
             return false;
           }
         }
@@ -1241,28 +1240,28 @@
           const hasNumber = /\d/.test(value);
 
           if (hasLength && hasUpper && hasLower && hasNumber) {
-            input.classList.add('input-valid');
-            input.classList.remove('input-invalid');
+            input.classList.add("input-valid");
+            input.classList.remove("input-invalid");
             return true;
           } else {
-            input.classList.add('input-invalid');
-            input.classList.remove('input-valid');
+            input.classList.add("input-invalid");
+            input.classList.remove("input-valid");
             return false;
           }
         }
 
         checkUrlParams() {
           const params = new URLSearchParams(window.location.search);
-          const roomId = params.get('room');
-          const token = params.get('token');
+          const roomId = params.get("room");
+          const token = params.get("token");
 
           if (roomId && token) {
-            document.getElementById('joinRoomId').value = roomId;
+            document.getElementById("joinRoomId").value = roomId;
             this.inviteToken = token;
             showJoinForm();
 
             const url = new URL(window.location);
-            url.search = '';
+            url.search = "";
             window.history.replaceState({}, document.title, url);
           }
         }
@@ -1279,11 +1278,11 @@
           this.sendButton.disabled = !canSendMessage;
 
           if (canSendMessage) {
-            this.messageInput.placeholder = 'Type your message...';
+            this.messageInput.placeholder = "Type your message...";
           } else if (!this.username) {
-            this.messageInput.placeholder = 'Enter your name first...';
+            this.messageInput.placeholder = "Enter your name first...";
           } else {
-            this.messageInput.placeholder = 'Connecting...';
+            this.messageInput.placeholder = "Connecting...";
           }
         }
 
@@ -1293,21 +1292,22 @@
             return;
 
           if (text.length > 1000) {
-            this.showError('Message too long');
+            this.showError("Message too long");
             return;
           }
 
           if (this.containsSuspiciousContent(text)) {
-            this.showError('Message contains inappropriate content');
+            this.showError("Message contains inappropriate content");
             return;
           }
 
           try {
             // Encrypt the message
-            const { encryptedContent, iv } = await this.cryptoManager.encryptMessage(
-              this.currentRoom.id,
-              text
-            );
+            const { encryptedContent, iv } =
+              await this.cryptoManager.encryptMessage(
+                this.currentRoom.id,
+                text
+              );
 
             const messageData = {
               roomId: this.currentRoom.id,
@@ -1318,31 +1318,36 @@
             };
 
             if (this.isConnected) {
-              this.socket.emit('encrypted-message', messageData);
-              
+              this.socket.emit("encrypted-message", messageData);
+
               // Add our own message to the chat immediately
-              this.addMessage({
-                roomId: this.currentRoom.id,
-                username: this.username,
-                text: text,
-                timestamp: messageData.timestamp,
-              }, true);
+              this.addMessage(
+                {
+                  roomId: this.currentRoom.id,
+                  username: this.username,
+                  text: text,
+                  timestamp: messageData.timestamp,
+                },
+                true
+              );
             } else {
               this.messageQueue.push(messageData);
-              this.addSystemMessage('Message queued - will send when connected');
+              this.addSystemMessage(
+                "Message queued - will send when connected"
+              );
             }
 
-            this.messageInput.value = '';
+            this.messageInput.value = "";
           } catch (error) {
-            console.error('Failed to encrypt message:', error);
-            this.showError('Failed to encrypt message');
+            console.error("Failed to encrypt message:", error);
+            this.showError("Failed to encrypt message");
           }
         }
 
         processMessageQueue() {
           while (this.messageQueue.length > 0 && this.isConnected) {
             const message = this.messageQueue.shift();
-            this.socket.emit('encrypted-message', message);
+            this.socket.emit("encrypted-message", message);
           }
         }
 
@@ -1356,28 +1361,30 @@
 
           // Ensure room key is generated immediately
           if (!this.cryptoManager.roomKeys.has(roomId)) {
-            console.log('Generating room key on join...');
+            console.log("Generating room key on join...");
             this.cryptoManager.generateRoomKey(roomId).then(() => {
-              console.log('✅ Room key ready');
+              console.log("✅ Room key ready");
             });
           }
 
           this.roomTitle.textContent = roomName;
           this.roomIdDisplay.textContent = `Room ID: ${roomId}`;
 
-          this.roomSelection.style.display = 'none';
-          this.chatContainer.classList.add('active');
+          this.roomSelection.style.display = "none";
+          this.chatContainer.classList.add("active");
 
           if (isCreator && inviteToken) {
             this.showInviteSection(inviteToken);
             this.addSystemMessage(
-              '🎉 Room created successfully! Share the secure invite link with others.',
+              "🎉 Room created successfully! Share the secure invite link with others."
             );
           } else {
-            this.addSystemMessage(`🚀 Welcome to ${roomName}! Messages are end-to-end encrypted.`);
+            this.addSystemMessage(
+              `🚀 Welcome to ${roomName}! Messages are end-to-end encrypted.`
+            );
           }
 
-          this.updateStatus('Connected 🔒', 'connected');
+          this.updateStatus("Connected 🔒", "connected");
           this.updateInputState();
           this.usernameInput.focus();
         }
@@ -1387,20 +1394,22 @@
           const inviteUrl = `${currentUrl}?room=${this.currentRoom.id}&token=${inviteToken}`;
 
           this.inviteLink.textContent = inviteUrl;
-          this.inviteSection.style.display = 'block';
+          this.inviteSection.style.display = "block";
         }
 
         addMessage(data, isOwnMessage) {
-          const messageEl = document.createElement('div');
-          messageEl.className = `message ${isOwnMessage ? 'own' : 'other'}`;
+          const messageEl = document.createElement("div");
+          messageEl.className = `message ${isOwnMessage ? "own" : "other"}`;
 
           const time = new Date(data.timestamp).toLocaleTimeString([], {
-            hour: '2-digit',
-            minute: '2-digit',
+            hour: "2-digit",
+            minute: "2-digit",
           });
 
           messageEl.innerHTML = `
-            <div class="message-info">${this.escapeHtml(data.username)} • ${time}</div>
+            <div class="message-info">${this.escapeHtml(
+              data.username
+            )} • ${time}</div>
             <div class="message-text">${this.escapeHtml(data.text)}</div>
           `;
 
@@ -1409,18 +1418,22 @@
         }
 
         addSystemMessage(text) {
-          const messageEl = document.createElement('div');
-          messageEl.className = 'message system';
-          messageEl.innerHTML = `<div class="message-text">${this.escapeHtml(text)}</div>`;
+          const messageEl = document.createElement("div");
+          messageEl.className = "message system";
+          messageEl.innerHTML = `<div class="message-text">${this.escapeHtml(
+            text
+          )}</div>`;
 
           this.messagesContainer.appendChild(messageEl);
           this.scrollToBottom();
         }
 
         addErrorMessage(text) {
-          const messageEl = document.createElement('div');
-          messageEl.className = 'message error';
-          messageEl.innerHTML = `<div class="message-text">⚠️ ${this.escapeHtml(text)}</div>`;
+          const messageEl = document.createElement("div");
+          messageEl.className = "message error";
+          messageEl.innerHTML = `<div class="message-text">⚠️ ${this.escapeHtml(
+            text
+          )}</div>`;
 
           this.messagesContainer.appendChild(messageEl);
           this.scrollToBottom();
@@ -1433,23 +1446,23 @@
 
         escapeHtml(text) {
           const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;',
-            '/': '&#x2F;',
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;",
+            "/": "&#x2F;",
           };
 
           return String(text).replace(/[&<>"'\/]/g, (s) => map[s]);
         }
 
         sanitizeInput(input, maxLength = 100) {
-          if (!input || typeof input !== 'string') return '';
+          if (!input || typeof input !== "string") return "";
 
           return input
-            .replace(/[<>\"'&]/g, '')
-            .replace(/\s+/g, ' ')
+            .replace(/[<>\"'&]/g, "")
+            .replace(/\s+/g, " ")
             .trim()
             .substring(0, maxLength);
         }
@@ -1470,24 +1483,26 @@
         }
 
         refreshSession() {
-          if (this.socket && this.isConnected) {
-            console.log('Session refreshed');
-          }
+          // Session refresh logic
         }
 
         showError(message) {
-          const errorDiv = document.getElementById('errorMessage');
-          errorDiv.innerHTML = `<div class="error-message">${this.escapeHtml(message)}</div>`;
+          const errorDiv = document.getElementById("errorMessage");
+          errorDiv.innerHTML = `<div class="error-message">${this.escapeHtml(
+            message
+          )}</div>`;
           setTimeout(() => {
-            errorDiv.innerHTML = '';
+            errorDiv.innerHTML = "";
           }, 5000);
         }
 
         showSuccess(message) {
-          const errorDiv = document.getElementById('errorMessage');
-          errorDiv.innerHTML = `<div class="success-message">${this.escapeHtml(message)}</div>`;
+          const errorDiv = document.getElementById("errorMessage");
+          errorDiv.innerHTML = `<div class="success-message">${this.escapeHtml(
+            message
+          )}</div>`;
           setTimeout(() => {
-            errorDiv.innerHTML = '';
+            errorDiv.innerHTML = "";
           }, 5000);
         }
       }
@@ -1496,67 +1511,65 @@
 
       function showCreateForm() {
         hideForm();
-        document.getElementById('createForm').classList.add('active');
-        document.getElementById('roomName').focus();
+        document.getElementById("createForm").classList.add("active");
+        document.getElementById("roomName").focus();
       }
 
       function showJoinForm() {
         hideForm();
-        document.getElementById('joinForm').classList.add('active');
-        document.getElementById('joinRoomId').focus();
+        document.getElementById("joinForm").classList.add("active");
+        document.getElementById("joinRoomId").focus();
       }
 
       function hideForm() {
-        document
-          .querySelectorAll('.room-form')
-          .forEach((form) => {
-            form.classList.remove('active');
-          });
-        document.getElementById('errorMessage').innerHTML = '';
+        document.querySelectorAll(".room-form").forEach((form) => {
+          form.classList.remove("active");
+        });
+        document.getElementById("errorMessage").innerHTML = "";
       }
 
       function createRoom() {
-        const roomName = document.getElementById('roomName').value.trim();
-        const password = document.getElementById('roomPassword').value.trim();
+        const roomName = document.getElementById("roomName").value.trim();
+        const password = document.getElementById("roomPassword").value.trim();
 
         if (!roomName || !password) {
-          chatApp.showError('Please fill in all fields');
+          chatApp.showError("Please fill in all fields");
           return;
         }
 
         if (roomName.length < 3 || roomName.length > 30) {
-          chatApp.showError('Room name must be between 3 and 30 characters');
+          chatApp.showError("Room name must be between 3 and 30 characters");
           return;
         }
 
         if (!/^[a-zA-Z0-9\s\-_\.]+$/.test(roomName)) {
-          chatApp.showError('Room name contains invalid characters');
+          chatApp.showError("Room name contains invalid characters");
           return;
         }
 
         if (password.length < 8 || password.length > 50) {
-          chatApp.showError('Password must be between 8 and 50 characters');
+          chatApp.showError("Password must be between 8 and 50 characters");
           return;
         }
 
         if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
           chatApp.showError(
-            'Password must contain uppercase, lowercase, and numbers',
+            "Password must contain uppercase, lowercase, and numbers"
           );
           return;
         }
 
-        chatApp.socket.emit('create-room', { roomName, password });
+        chatApp.socket.emit("create-room", { roomName, password });
       }
 
       function joinRoom() {
-        const roomId = document.getElementById('joinRoomId').value.trim();
+        const roomId = document.getElementById("joinRoomId").value.trim();
         const password = document
-          .getElementById('joinRoomPassword')
+          .getElementById("joinRoomPassword")
           .value.trim();
 
         if (!roomId) {
-          chatApp.showError('Please enter room ID');
+          chatApp.showError("Please enter room ID");
           return;
         }
 
@@ -1570,41 +1583,41 @@
         } else if (password) {
           joinData.password = password;
         } else {
-          chatApp.showError('Please enter password or use invite link');
+          chatApp.showError("Please enter password or use invite link");
           return;
         }
 
-        chatApp.socket.emit('join-room', joinData);
+        chatApp.socket.emit("join-room", joinData);
       }
 
       function leaveRoom() {
         if (chatApp.currentRoom) {
-          chatApp.socket.emit('leave-room', { roomId: chatApp.currentRoom.id });
+          chatApp.socket.emit("leave-room", { roomId: chatApp.currentRoom.id });
           chatApp.cryptoManager.clearRoomData(chatApp.currentRoom.id);
         }
 
         chatApp.currentRoom = null;
-        chatApp.username = '';
+        chatApp.username = "";
 
-        document.getElementById('usernameInput').value = '';
-        document.getElementById('messagesContainer').innerHTML =
+        document.getElementById("usernameInput").value = "";
+        document.getElementById("messagesContainer").innerHTML =
           '<div class="message system"><div class="message-text">Welcome to the secure private room! Enter your name above and start chatting...</div></div>';
 
-        chatApp.chatContainer.classList.remove('active');
-        chatApp.roomSelection.style.display = 'block';
-        chatApp.inviteSection.style.display = 'none';
+        chatApp.chatContainer.classList.remove("active");
+        chatApp.roomSelection.style.display = "block";
+        chatApp.inviteSection.style.display = "none";
 
         hideForm();
 
         const url = new URL(window.location);
-        url.search = '';
+        url.search = "";
         window.history.replaceState({}, document.title, url);
 
-        chatApp.updateStatus('Disconnected', 'disconnected');
+        chatApp.updateStatus("Disconnected", "disconnected");
       }
 
       function copyInviteLink() {
-        const link = document.getElementById('inviteLink').textContent;
+        const link = document.getElementById("inviteLink").textContent;
 
         if (navigator.clipboard && window.isSecureContext) {
           navigator.clipboard
@@ -1613,7 +1626,6 @@
               showCopySuccess();
             })
             .catch((err) => {
-              console.error('Clipboard API failed:', err);
               fallbackCopy(link);
             });
         } else {
@@ -1622,53 +1634,44 @@
       }
 
       function fallbackCopy(text) {
-        const textArea = document.createElement('textarea');
+        const textArea = document.createElement("textarea");
         textArea.value = text;
-        textArea.style.position = 'fixed';
-        textArea.style.opacity = '0';
+        textArea.style.position = "fixed";
+        textArea.style.opacity = "0";
         document.body.appendChild(textArea);
         textArea.focus();
         textArea.select();
 
         try {
-          document.execCommand('copy');
+          document.execCommand("copy");
           showCopySuccess();
         } catch (err) {
-          console.error('Fallback copy failed:', err);
-          chatApp.showError('Failed to copy link. Please copy manually.');
+          console.error("Fallback copy failed:", err);
+          chatApp.showError("Failed to copy link. Please copy manually.");
         }
 
         document.body.removeChild(textArea);
       }
 
       function showCopySuccess() {
-        const btn = document.querySelector('.copy-btn');
+        const btn = document.querySelector(".copy-btn");
         const originalText = btn.textContent;
-        btn.textContent = 'Copied! ✓';
-        btn.style.background = 'rgba(34, 197, 94, 1)';
+        btn.textContent = "Copied! ✓";
+        btn.style.background = "rgba(34, 197, 94, 1)";
 
         setTimeout(() => {
           btn.textContent = originalText;
-          btn.style.background = '';
+          btn.style.background = "";
         }, 2000);
       }
 
-      window.addEventListener('DOMContentLoaded', () => {
-        if (
-          location.protocol !== 'https:' &&
-          location.hostname !== 'localhost'
-        ) {
-          console.warn(
-            '⚠️ Running in non-secure context. Some features may be limited.',
-          );
-        }
-
+      window.addEventListener("DOMContentLoaded", () => {
         chatApp = new SecureChatApp();
       });
 
-      window.addEventListener('beforeunload', (e) => {
+      window.addEventListener("beforeunload", (e) => {
         if (chatApp && chatApp.currentRoom) {
-          chatApp.socket?.emit('leave-room', {
+          chatApp.socket?.emit("leave-room", {
             roomId: chatApp.currentRoom.id,
           });
         }
