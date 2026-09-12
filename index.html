@@ -108,42 +108,6 @@
       margin-right: 6px;
     }
 
-    .server-status-notice {
-      background: var(--warning-soft);
-      border: 1px solid rgba(251, 191, 36, 0.3);
-      border-radius: 16px;
-      padding: 18px 20px;
-      margin-bottom: 20px;
-      backdrop-filter: blur(10px);
-    }
-
-    .notice-content {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      text-align: left;
-    }
-
-    .notice-icon {
-      font-size: 26px;
-      flex-shrink: 0;
-      animation: pulse 2s infinite;
-    }
-
-    .notice-text h3 {
-      color: var(--warning);
-      margin: 0 0 8px 0;
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .notice-text p {
-      color: var(--text-secondary);
-      margin: 0 0 8px 0;
-      line-height: 1.5;
-      font-size: 13.5px;
-    }
-
     @keyframes pulse {
 
       0%,
@@ -154,6 +118,177 @@
       50% {
         transform: scale(1.1);
       }
+    }
+
+    /* Help / "server sleeping" support button + modal */
+    .help-trigger-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .help-trigger-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--border-soft);
+      border-radius: 30px;
+      color: var(--text-secondary);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .help-trigger-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .help-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 20, 0.75);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .help-modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .help-modal-card {
+      width: 100%;
+      max-width: 420px;
+      max-height: 85vh;
+      overflow-y: auto;
+      background: var(--bg-card-solid);
+      border: 1px solid var(--border-hover);
+      border-radius: 24px;
+      padding: 30px 26px;
+      text-align: center;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .help-modal-icon {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .help-modal-title {
+      color: var(--accent);
+      font-size: 21px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .help-modal-desc {
+      color: var(--text-secondary);
+      font-size: 13.5px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .help-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      text-align: left;
+      margin-bottom: 22px;
+    }
+
+    .help-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      background: var(--accent-soft);
+      border: 1px solid rgba(20, 232, 176, 0.2);
+      border-radius: 14px;
+    }
+
+    .help-step-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #06251d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .help-step-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .help-step-text strong {
+      color: var(--text-primary);
+    }
+
+    .wake-server-btn {
+      width: 100%;
+      justify-content: center;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .help-success {
+      display: none;
+      margin-bottom: 10px;
+    }
+
+    .help-success.active {
+      display: block;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .help-success-icon {
+      font-size: 40px;
+      margin-bottom: 8px;
+    }
+
+    .help-success-text {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .help-success-subtext {
+      color: var(--text-secondary);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .help-modal-close {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    .help-modal-close:hover {
+      color: var(--accent);
     }
 
     .security-info {
@@ -789,14 +924,8 @@
         flex-direction: column;
       }
 
-      .notice-content {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-      }
-
-      .notice-icon {
-        margin-bottom: 10px;
+      .help-modal-card {
+        padding: 26px 20px;
       }
     }
   </style>
@@ -810,22 +939,10 @@
       </div>
       <h1><span class="lock-emoji">🔐</span>CipherChat</h1>
 
-      <div class="server-status-notice">
-        <div class="notice-content">
-          <div class="notice-icon">😴</div>
-          <div class="notice-text">
-            <h3>Server Status Update</h3>
-            <p>
-              Our server is currently taking a nap on the free hosting tier!
-              If you want to chat with anyone, just try to create a room or
-              use an invite link first.
-            </p>
-            <p>
-              <strong>Please wait 5-10 seconds</strong> for the server to wake
-              up. If it doesn't respond, the server might be sleeping!
-            </p>
-          </div>
-        </div>
+      <div class="help-trigger-wrap">
+        <button class="help-trigger-btn" onclick="openHelpModal()">
+          🛠️ Trouble connecting? Get help
+        </button>
       </div>
 
       <div class="security-info">
@@ -959,6 +1076,55 @@
           <button class="send-button" id="sendButton" disabled>Send</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class="help-modal-overlay" id="helpModalOverlay" onclick="closeHelpModal(event)">
+    <div class="help-modal-card" onclick="event.stopPropagation()">
+      <div id="helpStepsView">
+        <div class="help-modal-icon">🛠️</div>
+        <h2 class="help-modal-title">Having Trouble?</h2>
+        <p class="help-modal-desc">
+          If creating or joining a room isn't working, the server might be
+          asleep on its free hosting tier. Try these steps:
+        </p>
+
+        <div class="help-steps">
+          <div class="help-step">
+            <div class="help-step-num">1</div>
+            <div class="help-step-text">
+              Click <strong>"Wake Up Server"</strong> below to send a wake-up
+              request.
+            </div>
+          </div>
+          <div class="help-step">
+            <div class="help-step-num">2</div>
+            <div class="help-step-text">
+              Wait <strong>2-3 minutes</strong> for the server to come back
+              online.
+            </div>
+          </div>
+          <div class="help-step">
+            <div class="help-step-num">3</div>
+            <div class="help-step-text">
+              Refresh the page and try to <strong>create/join</strong> the
+              room again.
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary wake-server-btn" id="wakeServerBtn" onclick="wakeUpServer()">
+          🚀 Wake Up Server
+        </button>
+      </div>
+
+      <div class="help-success" id="helpSuccessView">
+        <div class="help-success-icon">✅</div>
+        <div class="help-success-text">Request sent! The server should be back online soon.</div>
+        <div class="help-success-subtext">Please wait 2-3 minutes, then refresh and try again.</div>
+      </div>
+
+      <button class="help-modal-close" onclick="closeHelpModal()">Close</button>
     </div>
   </div>
 
@@ -1711,6 +1877,41 @@
         form.classList.remove("active");
       });
       document.getElementById("errorMessage").innerHTML = "";
+    }
+
+    // ── "Server sleeping?" help modal ──────────────────────────
+    function openHelpModal() {
+      // Reset to the steps view every time it's opened
+      document.getElementById("helpStepsView").style.display = "block";
+      document.getElementById("helpSuccessView").classList.remove("active");
+      const btn = document.getElementById("wakeServerBtn");
+      btn.disabled = false;
+      btn.innerHTML = "🚀 Wake Up Server";
+      document.getElementById("helpModalOverlay").classList.add("active");
+    }
+
+    function closeHelpModal(event) {
+      // Ignore clicks inside the card itself (only overlay/close button should close it)
+      if (event && event.target !== event.currentTarget) return;
+      document.getElementById("helpModalOverlay").classList.remove("active");
+    }
+
+    function wakeUpServer() {
+      const btn = document.getElementById("wakeServerBtn");
+      btn.disabled = true;
+      btn.innerHTML = "⏳ Waking Up...";
+
+      // Nudge the existing socket connection to retry right away -
+      // this is what actually pings the free-tier server back awake.
+      if (chatApp && chatApp.socket) {
+        chatApp.reconnectAttempts = 0;
+        chatApp.socket.connect();
+      }
+
+      setTimeout(() => {
+        document.getElementById("helpStepsView").style.display = "none";
+        document.getElementById("helpSuccessView").classList.add("active");
+      }, 500);
     }
 
     function createRoom() {
